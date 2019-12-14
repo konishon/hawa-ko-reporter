@@ -8,7 +8,7 @@ def init_db():
     """
     conn = sqlite3.connect(DATABASE)
     conn.execute(
-        'CREATE TABLE IF NOT EXISTS subs (user_id TEXT, platform TEXT,is_subscribed bool,message_time TEXT default 8)')
+        'CREATE TABLE IF NOT EXISTS subs (user_id TEXT, platform TEXT,is_subscribed bool,message_time TEXT default 8,address TEXT,lat TEXT,lot TEXT)')
     conn.close()
 
 
@@ -37,9 +37,9 @@ def select_subs_by_platform(platform):
     '''.format(
         "viber",
         1)
-   
+
     rows = query(conn, raw_query=raw_query)
-    
+
     return rows
 
 
