@@ -1,21 +1,29 @@
-import json
-from flask import Flask
+# import flask dependencies
+from flask import Flask, request, make_response, jsonify
+
+# initialize the flask app
 app = Flask(__name__)
 
-data = {'message':'The air quality is great'}
-
-data2 = {'message':'The air quality is imporving (reply from flask)'}
-
+# default route
 @app.route('/')
-def hello():
-    return json.dumps(data)
+def index():
+    return 'Hello Nishon!'
 
-@app.route('/aqi', methods=['POST'])
-def fetch_aqi():
-    data = request.get_json(silent=True)
-    print(data) 
-    return json.dumps(data2)
+def results():
+    # build a request object
+    req = request.get_json(force=True)
 
+    # fetch action from json
+    action = req.get('queryResult').get('action')
 
+    # return a fulfillment response
+    return {'fulfillmentText': 'This is a response from webhook.'}
+
+@app.route('/aqi', methods=['GET', 'POST'])
+def webhook():
+    # return response
+    return make_response(jsonify(results()))
+
+# run the app
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+   app.run()
