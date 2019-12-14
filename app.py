@@ -1,5 +1,6 @@
 # import flask dependencies
 from flask import Flask, request, make_response, jsonify
+from forecaster.solveathon_forecaster import *
 
 # initialize the flask app
 app = Flask(__name__)
@@ -12,6 +13,9 @@ def index():
 def results():
     # build a request object
     req = request.get_json(force=True)
+    print(req)
+
+    
 
     # fetch action from json
     action = req.get('queryResult').get('action')
