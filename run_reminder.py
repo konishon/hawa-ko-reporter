@@ -47,7 +47,7 @@ def get_nearest_station_name(point, stations):
 
 def get_location_from_address(address):
     geolocator = Nominatim(user_agent="hawa-ko-bot")
-    location = geolocator.geocode("Naxal")
+    location = geolocator.geocode(address)
     return location
 
 location = get_location_from_address("Balkumari")
