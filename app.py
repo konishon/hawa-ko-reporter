@@ -2,6 +2,8 @@ import sqlite3
 from flask import Flask, request, make_response, jsonify, g
 # from forecaster.solveathon_forecaster import *
 from db import get_db, query_db, init_db
+from messages.dialogflow import generate_dialog_flow_message
+import json
 
 
 app = Flask(__name__)
@@ -53,16 +55,37 @@ def index():
 
 
 def results():
-    req = request.get_json(force=True)
-    print(req)
-    # fetch action from json
-    intent_name = req.get('queryResult').get('intent').get('displayName')
-    if(intent_name == "location"):
-        print(intent_name)
-        # pred = predict([0, 11, 'Sunday', 'Ratna'])
-        return {'fulfillmentText': str("pred")}
+    with app.app_context():
 
-    return {'fulfillmentText': 'This is a response from webhook.'}
+        db = get_db(g)
+        cur = db.cursor()
+
+        req = request.get_json(force=True)
+        pprint(req)
+        intent_name = req.get('queryResult').get('intent').get('displayName')
+        subscribe_to_daily_update = intent_name == "subscribe.upsell-yes"
+        if(subscribe_to_daily_update):
+            payload = req.get("originalDetectIntentRequest").get(
+                "payload")
+
+            user_profile = payload.get("data").get("userProfile")
+
+            user_id = user_profile['id']
+            platform = payload["source"]
+
+            cur.execute(
+                'INSERT INTO subs (user_id,platform,is_subscribed) values (?,?,?)',
+                (
+                    user_id,
+                    platform,
+                    True
+                )
+            )
+
+            db.commit()
+            return generate_dialog_flow_message("I will remind you daily :)")
+
+        return {'fulfillmentText': 'This is a response from webhook.'}
 
 
 @app.route('/aqi', methods=['GET', 'POST'])
@@ -70,6 +93,11 @@ def webhook():
     # return response
     print("AQI")
     return make_response(jsonify(results()))
+
+
+def pprint(message):
+    x = json.dumps(message, sort_keys=True, indent=4)
+    print(x)
 
 
 if __name__ == '__main__':

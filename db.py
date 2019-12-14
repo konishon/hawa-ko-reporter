@@ -4,7 +4,7 @@ from constants import DATABASE
 def init_db():
     conn = sqlite3.connect('database.db')
     conn.execute(
-        'CREATE TABLE IF NOT EXISTS subs (user_id TEXT, platform TEXT,is_subscribed bool,message_time TEXT)')
+        'CREATE TABLE IF NOT EXISTS subs (user_id TEXT, platform TEXT,is_subscribed bool,message_time TEXT default 8)')
     conn.close()
 
 def get_db(g):
