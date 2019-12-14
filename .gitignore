@@ -4,6 +4,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 *.db
-*.sh
+config.sh
 .vscode/
 .ipynb_checkpoints/
