@@ -37,7 +37,7 @@ def select_subs_by_platform(platform):
     '''.format(
         "viber",
         1)
-    print("[INFO] {}".format(raw_query))
+   
     rows = query(conn, raw_query=raw_query)
     
     return rows
@@ -53,8 +53,4 @@ def query(conn, raw_query):
     cur.execute(raw_query)
 
     rows = cur.fetchall()
-    x = len(rows)
-    print(x)
-    for row in rows:
-        print(row)
     return rows

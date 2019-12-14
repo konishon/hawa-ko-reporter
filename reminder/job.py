@@ -3,11 +3,12 @@ from db.sqlite import select_subs_by_platform
 
 # from forecaster.solveathon_forecaster import predict
 
-def messsage_viber_subscribers():
+def messsage_viber_subscribers(message):
     subs = select_subs_by_platform("viber")
+    print("[INFO] messaging {0} people".format(len(subs)))
     for sub in subs:
         viber_id = sub[0]
-        message_to_viber(viber_id,"a update from viber")
+        message_to_viber(viber_id,message)
    
 if __name__ == '__main__':
     messsage_viber_subscribers()

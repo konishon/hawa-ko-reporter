@@ -64,6 +64,7 @@ def results():
         pprint(req)
         intent_name = req.get('queryResult').get('intent').get('displayName')
         subscribe_to_daily_update = intent_name == "subscribe.upsell-yes"
+        
         if(subscribe_to_daily_update):
             payload = req.get("originalDetectIntentRequest").get(
                 "payload")
