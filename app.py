@@ -1,7 +1,7 @@
 import sqlite3
 from flask import Flask, request, make_response, jsonify, g
-# from forecaster.solveathon_forecaster import *
-from db import get_db, query_db, init_db
+from db.sqlite_flask import get_db_for_flask,query_db
+from db.sqlite import init_db
 from messages.dialogflow import generate_dialog_flow_message
 import json
 
@@ -19,7 +19,7 @@ def close_connection(exception):
 @app.route('/hook', methods=['GET', 'POST'])
 def index():
     with app.app_context():
-        db = get_db(g)
+        db = get_db_for_flask(g)
         cur = db.cursor()
         event_type = "unsubscribe"
 
@@ -57,7 +57,7 @@ def index():
 def results():
     with app.app_context():
 
-        db = get_db(g)
+        db = get_db_for_flask(g)
         cur = db.cursor()
 
         req = request.get_json(force=True)

@@ -16,9 +16,7 @@ bot_configuration = BotConfiguration(
 )
 viber = Api(bot_configuration)
 
-def message_to_viber(viber_id):
+
+def message_to_viber(viber_id, message):
     viber.send_messages(to=viber_id,
-                        messages=[TextMessage(text="viber bot says hi")])
-
-
-message_to_viber("K66vu+GFKkkqIdJBf8+vzQ==")
+                        messages=[TextMessage(text=message)])
