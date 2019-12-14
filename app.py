@@ -1,7 +1,7 @@
 import sqlite3
 from flask import Flask, request, make_response, jsonify, g
 # from forecaster.solveathon_forecaster import *
-from db import get_db, query_db
+from db import get_db, query_db, init_db
 
 
 app = Flask(__name__)
@@ -73,4 +73,6 @@ def webhook():
 
 
 if __name__ == '__main__':
+    init_db()
+
     app.run()
