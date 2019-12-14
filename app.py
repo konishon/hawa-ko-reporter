@@ -8,19 +8,23 @@ app = Flask(__name__)
 # default route
 @app.route('/')
 def index():
-    return 'Hello Nishon!'
+    return 'Hello World!'
 
 def results():
     # build a request object
     req = request.get_json(force=True)
-    print(req)
-
     
-
+    
     # fetch action from json
-    action = req.get('queryResult').get('action')
+    intent_name = req.get('queryResult').get('intent').get('displayName')
+    if(intent_name=="location"):
+        print(intent_name)
+        pred = predict([0, 11, 'Sunday', 'Ratna'])
+        return {'fulfillmentText': str(pred)}
+  
 
-    # return a fulfillment response
+
+   
     return {'fulfillmentText': 'This is a response from webhook.'}
 
 @app.route('/aqi', methods=['GET', 'POST'])
