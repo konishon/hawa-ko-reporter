@@ -3,6 +3,7 @@ from geopy import distance
 from constants import station_names, station_locations
 
 from geopy.extra.rate_limiter import RateLimiter
+import geopy
 
 
 def get_nearest_station_name(point, stations):
@@ -12,13 +13,22 @@ def get_nearest_station_name(point, stations):
             station, point).km
 
         distances.append(calc_distance)
+    
     index = stations.index(min(stations))
+    # print(distances)
+    
+    item_value = min(distances)
+    # print(item_value)
+
+    index  = distances.index(item_value)
+    # print(index)
+    print(station_names[index])
+
     return station_names[index]
 
 
 def get_location_from_address(address):
-    geolocator = Nominatim(user_agent="hawa-ko-bot",
-                           country_codes='np', timeout=6)
-    geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
+    geopy.geocoders.options.default_timeout = 7
+    geolocator = Nominatim(user_agent="hawa-ko-bot")
     location = geolocator.geocode(address)
     return location

@@ -8,6 +8,8 @@ from geo.geo import get_location_from_address, get_nearest_station_name
 from constants import station_locations, station_names, days, warning_messages
 from forecaster.solveathon_forecaster import predict
 from datetime import datetime
+from difflib import SequenceMatcher
+
 
 app = Flask(__name__)
 
@@ -95,19 +97,31 @@ def results():
             address = req.get('queryResult').get("outputContexts")[
                 0].get("parameters").get("location").get("street-address")
 
+            day_of_the_week = datetime.today().weekday()
+            for station_name in station_names:
+                if similar(station_name, address) >= 0.8:
+
+                    pred = predict(
+                        [0, 11, days[day_of_the_week], station_name])
+
+                    warning_message_index = int(pred) + 1
+
+                    warning_message = warning_messages[int(
+                        warning_message_index)].format(station_name)
+
+                    return generate_dialog_flow_message(warning_message)
+
             location = get_location_from_address(address)
             station_name = get_nearest_station_name(
                 location, station_locations)
-            day_of_the_week = datetime.today().weekday()
 
             pred = predict([0, 11, days[day_of_the_week], station_name])
             warning_message_index = int(pred) + 1
 
-            warning_message = warning_messages[warning_message_index.format(location)]
+            warning_message = warning_messages[int(
+                warning_message_index)].format(location)
 
-            message = ""
-
-            return generate_dialog_flow_message(message)
+            return generate_dialog_flow_message(warning_message)
 
         return {'fulfillmentText': 'Looks like the weather bots are not respoding :( )'}
 
@@ -117,6 +131,10 @@ def webhook():
     # return response
     print("AQI")
     return make_response(jsonify(results()))
+
+
+def similar(a, b):
+    return SequenceMatcher(None, a, b).ratio()
 
 
 def pprint(message):
