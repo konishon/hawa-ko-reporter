@@ -1,5 +1,7 @@
+import time
 from messages.push_to_viber import message_to_viber
 from db.sqlite import select_subs_by_platform
+
 
 # from forecaster.solveathon_forecaster import predict
 
@@ -8,6 +10,7 @@ def messsage_viber_subscribers(message):
     print("[INFO] messaging {0} people".format(len(subs)))
     for sub in subs:
         viber_id = sub[0]
+        time.sleep(1)
         message_to_viber(viber_id,message)
    
 if __name__ == '__main__':

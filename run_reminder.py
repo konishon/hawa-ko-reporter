@@ -3,6 +3,7 @@ from datetime import datetime
 from forecaster.solveathon_forecaster import predict
 from geopy.geocoders import Nominatim
 from geopy import distance
+from constants import warning_messages
 
 
 days = {
@@ -45,20 +46,28 @@ def get_nearest_station_name(point, stations):
     index = stations.index(min(stations))
     return station_names[index]
 
+
 def get_location_from_address(address):
     geolocator = Nominatim(user_agent="hawa-ko-bot")
     location = geolocator.geocode(address)
     return location
 
+
 location = get_location_from_address("Balkumari")
-station_name = get_nearest_station_name((location.latitude, location.longitude), station_locations)
+station_name = get_nearest_station_name(
+    (location.latitude, location.longitude), station_locations)
 
 day_of_the_week = datetime.today().weekday()
 
 pred = predict([0, 11, days[day_of_the_week], station_name])
-message = "It is {0} for {1}".format(pred,station_name)
 
-messsage_viber_subscribers(message)
+warning_message_index = int(pred)
+print(warning_message_index)
+# print(warning_messages[warning_message_index])
+print(warning_messages[int(warning_message_index)])
+
+warning_message = warning_messages[warning_message_index].format("Balkumari")
+messsage_viber_subscribers(warning_message)
 
 log = open('reminder_logs.txt', 'a')
 log.write('\nSend on ' + str(datetime.now()))

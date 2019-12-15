@@ -5,7 +5,7 @@ from db.sqlite_flask import get_db_for_flask, query_db
 from db.sqlite import init_db
 from messages.dialogflow import generate_dialog_flow_message
 from geo.geo import get_location_from_address, get_nearest_station_name
-from constants import station_locations, station_names, days
+from constants import station_locations, station_names, days, warning_messages
 from forecaster.solveathon_forecaster import predict
 from datetime import datetime
 
@@ -101,8 +101,12 @@ def results():
             day_of_the_week = datetime.today().weekday()
 
             pred = predict([0, 11, days[day_of_the_week], station_name])
-            message = "You looked for {0} It is {1} for {2} ".format(
-                address, pred, station_name)
+            warning_message_index = int(pred) + 1
+
+            warning_message = warning_messages[warning_message_index.format(location)]
+
+            message = ""
+
             return generate_dialog_flow_message(message)
 
         return {'fulfillmentText': 'Looks like the weather bots are not respoding :( )'}

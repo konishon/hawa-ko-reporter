@@ -2,6 +2,8 @@ from geopy.geocoders import Nominatim
 from geopy import distance
 from constants import station_names, station_locations
 
+from geopy.extra.rate_limiter import RateLimiter
+
 
 def get_nearest_station_name(point, stations):
     distances = []
@@ -15,6 +17,8 @@ def get_nearest_station_name(point, stations):
 
 
 def get_location_from_address(address):
-    geolocator = Nominatim(user_agent="hawa-ko-bot")
+    geolocator = Nominatim(user_agent="hawa-ko-bot",
+                           country_codes='np', timeout=6)
+    geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
     location = geolocator.geocode(address)
     return location
